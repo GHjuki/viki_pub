@@ -5,7 +5,6 @@ use std::fs;
 pub fn get() -> HashMap<String,String> {
     let mut config:HashMap<String,String> = HashMap::new();
     let tmpstr = fs::read_to_string("c:/ARM/Logs/LastPrice.info");
-    let mut beg_date = String::new();
     match tmpstr {
         Ok(t) => {
             for i in t.lines() {
@@ -18,7 +17,6 @@ pub fn get() -> HashMap<String,String> {
         }
         Err(_) => { eprintln!("Can't open LastPrice.info") }
     }
-    println!("{}", beg_date); // - priceDate
 //>
 
 // get target
@@ -43,7 +41,7 @@ pub fn get() -> HashMap<String,String> {
 //>
 }
 
-pub fn get_config(pingtime: &mut u64, utm: &mut String){
+pub fn get_config(pingtime: &mut u32, utm: &mut String){
     // let mut pingtime:u64=60000;
     // let mut utm:String = String::from("http://127.0.0.1:8080/home");
     let tmpstr = fs::read_to_string("c:/distrib/vikionline/vikionline.conf");

@@ -4,11 +4,13 @@ use std::error::Error;
 pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
     let mut config: HashMap<String, String> = HashMap::new(); //итоговый хешмэп с конфигом
 //    let mut resp = reqwest::blocking::get("http://172.16.17.65:8080/home")?.text()?; //for test
-    let mut resp = reqwest::blocking::get(utm)?.text()?;
+//     let mut resp = reqwest::blocking::get(utm)?.text()?;
+    let mut resp = ureq::get(utm).call()?.into_string()?;
+    // let mut resp = "".to_string();
 
 // < error 403
     if resp.contains("HTTP ERROR 403") {
-        config.insert("UTMstatus".to_string(), "HTTP ERROR 403".to_string());
+        config.insert("rsastatus".to_string(), "HTTP ERROR 403".to_string()); //UTMstatus
     } else {
 //>
         resp.truncate(6701); // Отрезаем лишний конец
@@ -19,15 +21,37 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 
 // <get проблемы с RSA
         if resp.contains("Проблемы с RSA") {
-            config.insert("UTMstatus".to_string(), "Проблемы с RSA".to_string());
-        } else { config.insert("UTMstatus".to_string(), "".to_string()); }
+            config.insert("rsastatus".to_string(), "Проблемы с RSA".to_string());
+        } else { config.insert("rsastatus".to_string(), "".to_string()); }
 //>
 
 // <get лицензия фсрар
 //        if resp.contains("Лицензия на вид деятельности действует") {
 //           config.insert("UTMlicense".to_string(), "1".to_string());
 //        } else { config.insert("UTMlicense".to_string(), "0".to_string()); }
-        config.insert("UTMlicense".to_string(), "1".to_string());
+        config.insert("utmlicense".to_string(), "1".to_string());
+//>
+
+// <get utmversion
+        while start < words.len() {
+            if words[start].contains("Версия") {
+                // item = start;
+                break;
+            }
+            start += 1;
+        }
+        let mut tmpstr = String::new();
+        let mut flag = false;
+        println!("--=={:?}==--",words[start+5]);
+        for c in words[start + 5].chars() {
+            if c == '>' {
+                flag = true;
+                continue;
+            }
+            if c == '<' { break }
+            if flag { tmpstr.push(c); }
+        }
+        config.insert("utmversion".to_string(), tmpstr);//
 //>
 
 // <get BuildNumber
@@ -48,7 +72,7 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
             if c == '<' { break }
             if flag { tmpstr.push(c); }
         }
-        config.insert("utmversion".to_string(), tmpstr);
+        config.insert("buildNumber".to_string(), tmpstr);// utmversion
 //>
 
 
