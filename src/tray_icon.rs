@@ -13,8 +13,8 @@ pub struct SystemTray {
     icon: nwg::Icon,
     tray: nwg::TrayNotification,
     tray_menu: nwg::Menu,
-    tray_item1: nwg::MenuItem,
-    tray_item2: nwg::MenuItem,
+    // tray_item1: nwg::MenuItem,
+    // tray_item2: nwg::MenuItem,
     tray_item3: nwg::MenuItem,
 }
 
@@ -25,14 +25,14 @@ impl SystemTray {
         self.tray_menu.popup(x, y);
     }
 
-    fn hello1(&self) {
-        nwg::modal_info_message(&self.window, "Hello", "Hello World!");
-    }
+    // fn hello1(&self) {
+    //     nwg::modal_info_message(&self.window, "Hello", "Hello World!");
+    // }
 
-    fn hello2(&self) {
-        let flags = nwg::TrayNotificationFlags::USER_ICON | nwg::TrayNotificationFlags::LARGE_ICON;
-        self.tray.show("Hello World", Some("Welcome to my application"), Some(flags), Some(&self.icon));
-    }
+    // fn hello2(&self) {
+    //     let flags = nwg::TrayNotificationFlags::USER_ICON | nwg::TrayNotificationFlags::LARGE_ICON;
+    //     self.tray.show("Hello World", Some("Welcome to my application"), Some(flags), Some(&self.icon));
+    // }
 
     fn exit(&self) {
         nwg::stop_thread_dispatch();

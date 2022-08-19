@@ -28,7 +28,10 @@ pub fn get() -> HashMap<String,String> {
                     let tmpvec1: Vec<&str> = line.split_whitespace().collect();
                     let tmpvec = tmpvec1.get(1).unwrap();
                     let tmpvec2: Vec<&str> = tmpvec.split('.').collect();
-                    config.insert("target".to_string(),tmpvec2.get(0).unwrap().to_string()); // -target
+                    let mut tmp3 = tmpvec2.get(0).unwrap().to_string();
+                    tmp3.remove(0);
+                    // println!("----------{:?}--------------",tmp3);
+                    config.insert("target".to_string(),tmp3); // -target
                 }
             }
         }

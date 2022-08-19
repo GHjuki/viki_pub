@@ -1,12 +1,12 @@
 // use core::panicking::panic;
 use std::collections::HashMap;
 use std::fs;
-use std::io::Read;
-use std::ptr::hash;
-use std::str::FromStr;
-use chrono::{DateTime, NaiveDateTime, NaiveDate, NaiveTime, Utc, TimeZone};
-use dateparser::DateTimeUtc;
-use native_windows_gui::keys::PRINT;
+// use std::io::Read;
+// use std::ptr::hash;
+// use std::str::FromStr;
+use chrono::{NaiveDate};
+// use dateparser::DateTimeUtc;
+// use native_windows_gui::keys::PRINT;
 // use native_windows_gui::RawResourceType::String;
 
 pub fn get() -> HashMap<String, String> {
@@ -56,7 +56,7 @@ pub fn get() -> HashMap<String, String> {
             eprintln!("Error open CashRegisters.log");
         }
     }
-/// convert source data to server like data
+// convert source data to server like data
     transform_bool(&mut config,"Fiscal");
 
     transform_bool(&mut config,"IsDocumentOpen");
@@ -115,6 +115,9 @@ pub fn get() -> HashMap<String, String> {
     // let datetime = DateTime::parse_from_str(&tmpstr,"%d-%m-%Y");
     // println!("{:?}",datetime);
 
+//<get arm_config from CashRegisters.log
+    config.insert("ARMversion".to_string(),arm_config());
+//>
     config
 }
 
@@ -126,14 +129,14 @@ fn safe_unwrap (s: Option<&String>) -> String {
 }
 
 fn date_to_timestamp(oldDoc:&String) -> String {
-    println!("{:?}",oldDoc.len());
+    // println!("{:?}",oldDoc.len());
     if oldDoc.len()==10 {
         let mut vec:Vec<String> = Vec::new();
         for i in oldDoc.split('.') {
             vec.push(i.to_string());
         }
         let timestamp = NaiveDate::from_ymd(vec.get(2).unwrap().parse::<i32>().unwrap(), vec.get(1).unwrap().parse::<u32>().unwrap(), vec.get(0).unwrap().parse::<u32>().unwrap()).and_hms(0,0,0).timestamp();
-        println!("3-{:?}",timestamp);
+        // println!("3-{:?}",timestamp);
             return timestamp.to_string();
     }
     "".to_string()
@@ -151,4 +154,27 @@ fn transform_bool(map: &mut HashMap<String, String>, string:&str) {
             }
         }
     }
+}
+
+fn arm_config() -> String{
+    let mut ARMversion = String::new();
+    let mut last_line = String::new();
+    let tmpstr=fs::read_to_string("c:/ARM/Logs/YaRMarka.log");
+    match tmpstr {
+        Ok(t) => {
+            for i in t.lines() {
+                last_line=i.to_string();             //get last line from file
+            }
+        }
+        Err(_) => {eprintln!("Can't read Yarmarka.log")}
+    }
+
+    let mut vec:Vec<String>=Vec::new();
+    for i in last_line.split_whitespace() {vec.push(i.to_string())}
+    match vec.get(2){
+        None => {eprintln!("Can't get ARM version from Yarmarka.log")}
+        Some(t) => {ARMversion=t.to_string()}
+
+    }
+    ARMversion
 }

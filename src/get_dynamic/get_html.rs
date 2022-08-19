@@ -42,7 +42,7 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
         }
         let mut tmpstr = String::new();
         let mut flag = false;
-        println!("--=={:?}==--",words[start+5]);
+        // println!("--=={:?}==--",words[start+5]);
         for c in words[start + 5].chars() {
             if c == '>' {
                 flag = true;
