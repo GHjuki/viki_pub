@@ -1,13 +1,6 @@
-// use core::panicking::panic;
 use std::collections::HashMap;
 use std::fs;
-// use std::io::Read;
-// use std::ptr::hash;
-// use std::str::FromStr;
 use chrono::{NaiveDate};
-// use dateparser::DateTimeUtc;
-// use native_windows_gui::keys::PRINT;
-// use native_windows_gui::RawResourceType::String;
 
 pub fn get() -> HashMap<String, String> {
     let tmpstr = fs::read_to_string("c:/ARM/Logs/CashRegisters.log");
@@ -20,7 +13,6 @@ pub fn get() -> HashMap<String, String> {
                 match vec.get(0) {
                     None => {}
                     Some(t) => {
-                        // let d=vec.get(2);
                         match &t[..] {
                             "OldestOfdDoc" => {config.insert("OldestOfdDoc".to_string(), safe_unwrap(vec.get(2)));}
                             "CountNotSendOfdDoc" => {config.insert("CountNotSendOfdDoc".to_string(),safe_unwrap(vec.get(2)));}
@@ -80,40 +72,6 @@ pub fn get() -> HashMap<String, String> {
         None => { println!("FrEndDate is not in list") }
         Some(oldDoc) => { config.insert("FrEndDate".to_string(), date_to_timestamp(oldDoc)); }
     }
-//    let datetime = DateTime::parse_from_str(date_str, "%Y-%m-%d %H:%M:%S %z").unwrap();
-// date to timestamp
-
-
-    // println!("{}", ts);
-    // println!("3-{:?}",vec);
-
-
-    // let tmp = NaiveDate::from_ymd(2022,10,4).and_hms(0,0,0);
-    // let tmp3 = oldDoc.parse::<dateparser::DateTimeUtc>().unwrap();
-    // println!("{:?}",tmp);
-
-    // println!("{:?}",tmp3);
-    // let date_list = oldDoc.split('.');
-    // let tmp1= NaiveDate::parse_from_str(oldDoc,"%d.%m.%Y").unwrap();
-    // let tmp2 = NaiveDateTime::timestamp(&tmp1);
-    // println!("{:?}",tmp2);
-    //     println!("{},{},{}",date_list.,date_list[1],date_list[0]);
-    // let date_time: NaiveTime = NaiveTime::from(tmp1.parse().unwrap());
-    // println!("{:?} - {:?}",date_time,date_time.time);
-
-
-    // let mut tmpstr = String::new();
-    // for i in oldDoc.chars() {
-    //     if i=='.' {
-    //         tmpstr.push('-');
-    //     } else {
-    //         tmpstr.push(i);
-    //     }
-    // }
-    // println!("{:?}",tmpstr);
-
-    // let datetime = DateTime::parse_from_str(&tmpstr,"%d-%m-%Y");
-    // println!("{:?}",datetime);
 
 //<get arm_config from CashRegisters.log
     config.insert("ARMversion".to_string(),arm_config());
@@ -136,7 +94,6 @@ fn date_to_timestamp(oldDoc:&String) -> String {
             vec.push(i.to_string());
         }
         let timestamp = NaiveDate::from_ymd(vec.get(2).unwrap().parse::<i32>().unwrap(), vec.get(1).unwrap().parse::<u32>().unwrap(), vec.get(0).unwrap().parse::<u32>().unwrap()).and_hms(0,0,0).timestamp();
-        // println!("3-{:?}",timestamp);
             return timestamp.to_string();
     }
     "".to_string()
@@ -149,7 +106,6 @@ fn transform_bool(map: &mut HashMap<String, String>, string:&str) {
             match &t[..]{
                 "True" => {map.insert(string.to_string(),"1".to_string());},
                 "False" => {map.insert(string.to_string(),"0".to_string());},
-
                 _ => {}
             }
         }

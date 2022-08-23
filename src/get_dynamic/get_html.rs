@@ -3,10 +3,7 @@ use std::error::Error;
 
 pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
     let mut config: HashMap<String, String> = HashMap::new(); //итоговый хешмэп с конфигом
-//    let mut resp = reqwest::blocking::get("http://172.16.17.65:8080/home")?.text()?; //for test
-//     let mut resp = reqwest::blocking::get(utm)?.text()?;
     let mut resp = ureq::get(utm).call()?.into_string()?;
-    // let mut resp = "".to_string();
 
 // < error 403
     if resp.contains("HTTP ERROR 403") {
@@ -15,8 +12,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 //>
         resp.truncate(6701); // Отрезаем лишний конец
         let words: Vec<&str> = resp.split_whitespace().collect(); //весь ответ помещаем в вектор разделяя по пробелу
-//    println!("{:#?}",words);
-//         let mut item: usize = 0;
         let mut start = 100;
 
 // <get проблемы с RSA
@@ -35,14 +30,12 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // <get utmversion
         while start < words.len() {
             if words[start].contains("Версия") {
-                // item = start;
                 break;
             }
             start += 1;
         }
         let mut tmpstr = String::new();
         let mut flag = false;
-        // println!("--=={:?}==--",words[start+5]);
         for c in words[start + 5].chars() {
             if c == '>' {
                 flag = true;
@@ -57,7 +50,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // <get BuildNumber
         while start < words.len() {
             if words[start].contains("BuildNumber") {
-                // item = start;
                 break;
             }
             start += 1;
@@ -79,7 +71,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // <get Неотправленные чеки
         while start < words.len() {
             if words[start].contains("Неотправленные") {
-                // item = start;
                 break;
             }
             start += 1;
@@ -95,7 +86,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // <RSA start, RSA end
         while start < words.len() {
             if words[start].contains("RSA") {
-//                item = start;
                 break;
             }
             start += 1;
@@ -107,7 +97,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // <GOST start, GOST end
         while start < words.len() {
             if words[start].contains("ГОСТ") {
-                // item = start;
                 break;
             }
             start += 1;
@@ -119,7 +108,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // <FSRAR-ID
         while start < words.len() {
             if words[start].contains("FSRAR-RSA-") {
-                // item = start;
                 break;
             }
             start += 1;
@@ -128,7 +116,6 @@ pub fn get(utm:&String) -> Result<HashMap<String, String>, Box<dyn Error>> {
         config.insert("fsrar".to_string(), tmpstr.to_string());
 //>
 
-//    println!("build - {:#?}",config);
     }
 
     Ok(config)

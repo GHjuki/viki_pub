@@ -8,7 +8,6 @@ pub fn get() -> HashMap<String,String> {
     match tmpstr {
         Ok(t) => {
             for i in t.lines() {
-                // println!("{:?}",i);
                 if i.contains("beg_date") {
                     config.insert("priceDate".to_string(),i[11..21].to_string());
                     break;
@@ -30,7 +29,6 @@ pub fn get() -> HashMap<String,String> {
                     let tmpvec2: Vec<&str> = tmpvec.split('.').collect();
                     let mut tmp3 = tmpvec2.get(0).unwrap().to_string();
                     tmp3.remove(0);
-                    // println!("----------{:?}--------------",tmp3);
                     config.insert("target".to_string(),tmp3); // -target
                 }
             }
@@ -45,10 +43,7 @@ pub fn get() -> HashMap<String,String> {
 }
 
 pub fn get_config(pingtime: &mut u32, utm: &mut String){
-    // let mut pingtime:u64=60000;
-    // let mut utm:String = String::from("http://127.0.0.1:8080/home");
     let tmpstr = fs::read_to_string("c:/distrib/vikionline/vikionline.conf");
-//    println!("{:?}",tmpstr);
     match tmpstr {
         Ok(t) => {
             let mut tmp_vec:Vec<String> = Vec::new();
@@ -74,5 +69,4 @@ pub fn get_config(pingtime: &mut u32, utm: &mut String){
         }
         Err(_) => {println!("Can't find vikionline.conf")}
     };
-    // (pingtime,*utm)
 }
