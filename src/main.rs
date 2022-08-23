@@ -1,6 +1,5 @@
 #![allow(non_snake_case)]
 #![windows_subsystem = "windows"]
-extern crate core;
 
 mod get_static;
 mod get_dynamic;
